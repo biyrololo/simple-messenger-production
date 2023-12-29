@@ -1,0 +1,10 @@
+body{
+  margin: 0;
+  background: #292929;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+h2, h1, a, p, span{
+  color: white;
+}
