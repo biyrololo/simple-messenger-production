@@ -1,4 +1,6 @@
-DATABASE_URL = "postgres://messenger_y76f_user:PGLbYeGu3Z6OGJXD3MHL01zhzwXs9x3V@dpg-cm7trti1hbls73abapg0-a/messenger_y76f"
+import os
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 from sqlalchemy import create_engine, text, Column, Integer, String
 from sqlalchemy.orm import sessionmaker
