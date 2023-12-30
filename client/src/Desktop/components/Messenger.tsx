@@ -65,7 +65,7 @@ export default function Messenger() {
     )
 
     useEffect(() => {
-        const newSocket = new WebSocket(`wss://3.75.158.163:8000/me/ws/${user_id}/${interlocutorId}`);
+        const newSocket = new WebSocket(`wss://simple-messenger-server.onrender.com/me/ws/${user_id}/${interlocutorId}`);
 
         newSocket.onmessage = (event) => {
             const data = JSON.parse(event.data);
