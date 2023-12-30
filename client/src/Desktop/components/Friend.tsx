@@ -1,4 +1,4 @@
-import { Button, Divider } from "@mui/material";
+import { Button } from "@mui/material";
 import { FriendType } from "../types/Friend";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";

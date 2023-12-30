@@ -1,4 +1,4 @@
-import { Button, IconButton, TextField } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import { useState, useRef, useContext, useEffect } from "react";
 import { MessageType, MessageResponseType } from "../types/Messege";
 import SendIcon from '@mui/icons-material/Send';

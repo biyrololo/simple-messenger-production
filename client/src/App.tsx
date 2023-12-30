@@ -1,7 +1,6 @@
-import React from 'react';
 import './Main.css';
 import './App.css';
-import {Routes, Route, Router, BrowserRouter} from 'react-router-dom';
+import {Routes, Route, BrowserRouter} from 'react-router-dom';
 import DesktopLoginPage from './Desktop/pages/LoginPage';
 import DesktopMessengerPage from './Desktop/pages/MessengerPage';
 import { createContext, useState } from 'react';
