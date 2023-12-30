@@ -203,6 +203,11 @@ export default function DesktopLoginPage() {
                     variant="contained"
                     onClick={handleLogin}
                     color="secondary"
+                    style={
+                        {
+                            color: 'white'
+                        }
+                    }
                     >
                         Войти
                     </Btn>
@@ -255,6 +260,11 @@ export default function DesktopLoginPage() {
                     variant="contained"
                     onClick={handleRegister}
                     color="secondary"
+                    style={
+                        {
+                            color: 'white'
+                        }
+                    }
                     >
                         Зарегистрироваться
                     </Btn>
