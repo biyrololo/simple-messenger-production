@@ -65,7 +65,7 @@ export default function Messenger() {
     )
 
     useEffect(() => {
-        const newSocket = new WebSocket(`ws://localhost:8000/me/ws/${user_id}/${interlocutorId}`);
+        const newSocket = new WebSocket(`ws://${axios.defaults.baseURL}/me/ws/${user_id}/${interlocutorId}`);
 
         newSocket.onmessage = (event) => {
             const data = JSON.parse(event.data);
