@@ -25,6 +25,13 @@ def get_user_endpoint(user_id: int, db=Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+@app.get('/get-username/{user_id}')
+def get_username_endpoint(user_id: int, db=Depends(get_db)):
+    user = get_user_by_id(user_id, db)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user.username
+
 @app.get('/check-auth')
 def check_auth_endpoint(username: str, password: str, db=Depends(get_db)):
     user = get_user_by_username(username, db)

@@ -18,8 +18,7 @@ export default function DesktopMessengerPage() {
             <div className="d-flex"
             style={
                 {
-                    width: 'min(1050px, 100%)',
-                    margin: '0 auto'
+                    width: '100%',
                 }
             }
             >

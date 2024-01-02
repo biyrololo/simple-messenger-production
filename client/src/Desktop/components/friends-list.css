@@ -12,6 +12,10 @@
     display: none;
 }
 
+.mobile #friends {
+    width: 100%;
+} 
+
 .friend {
     width: 100% !important;
     height: 60px !important;

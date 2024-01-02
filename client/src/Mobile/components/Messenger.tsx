@@ -1,16 +1,21 @@
 import { CircularProgress, IconButton, InputAdornment, TextField } from "@mui/material";
 import { useState, useRef, useContext, useEffect } from "react";
-import { MessageType, MessageResponseType } from "../types/Messege";
+import { MessageType, MessageResponseType } from "my-types/Messege";
 import SendIcon from '@mui/icons-material/Send';
-import './messenger.css';
-import { MessengerInterlocutorId } from "../pages/MessengerPage";
 import { UserInfoContext } from "../../App";
 import axios from "axios";
-import InterlocutorProfile from "../../Mobile/components/InterlocutorProfile";
+import { useParams } from "react-router-dom";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useNavigate } from "react-router-dom";
+import InterlocutorProfile from "./InterlocutorProfile";
 
-export default function Messenger() {
+export default function MobileMessenger() {
 
-    const interlocutorId = useContext(MessengerInterlocutorId);
+    const navigate = useNavigate();
+
+    const { id } = useParams();
+
+    const interlocutorId = parseInt(id || '-1');
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -107,6 +112,10 @@ export default function Messenger() {
             }
         }
     }, [user_id, interlocutorId]);
+
+    const handleGoBack = () => {
+        navigate(-1);
+    }
 
     return (
         <div id="messenger">

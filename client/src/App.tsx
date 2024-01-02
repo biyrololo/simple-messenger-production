@@ -7,6 +7,9 @@ import { createContext, useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material';
 import axios from 'axios';
 import DefaultPage from './Desktop/pages/DefaultPage';
+import { BrowserView, MobileView } from 'react-device-detect';
+import MobileFriendsPage from './Mobile/pages/FriendsPage';
+import MobileMessenger from './Mobile/components/Messenger';
 
 const darkTheme = createTheme({
   palette: {
@@ -42,7 +45,8 @@ const UserInfoContext = createContext<UserInfoContextType>(
 
 function App() {
 
-  axios.defaults.baseURL = 'https://simple-messenger-server.onrender.com/';
+  // axios.defaults.baseURL = 'https://simple-messenger-server.onrender.com/';
+  axios.defaults.baseURL = 'http://localhost:8000/';
 
   const [userInfo, setUserInfo] = useState<UserInfoType>({
     id: parseInt(localStorage.getItem('user_id') || '-1'),
@@ -52,13 +56,25 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
-        <BrowserRouter>
-          <Routes>
-            <Route path='/' element={<DefaultPage/>} />
-            <Route path='/messenger/:id' element={<DesktopMessengerPage/>} />
-            <Route path='/login' element={<DesktopLoginPage/>} />
-          </Routes>
-        </BrowserRouter>
+        <BrowserView>
+          <BrowserRouter>
+            <Routes>
+              <Route path='/' element={<DefaultPage/>} />
+              <Route path='/messenger/:id' element={<DesktopMessengerPage/>} />
+              <Route path='/login' element={<DesktopLoginPage/>} />
+            </Routes>
+          </BrowserRouter>
+        </BrowserView>
+        <MobileView className='mobile'>
+          <BrowserRouter>
+            <Routes>
+              <Route path='/' element={<DefaultPage/>} />
+              <Route path='/friends' element={<MobileFriendsPage/>}/>
+              <Route path='/messenger/:id' element={<MobileMessenger/>} />
+              <Route path='/login' element={<DesktopLoginPage/>} />
+            </Routes>
+          </BrowserRouter>
+        </MobileView>
       </UserInfoContext.Provider>
     </ThemeProvider>
   );
