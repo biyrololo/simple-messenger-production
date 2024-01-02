@@ -1,8 +1,8 @@
 import os
 import hashlib
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-
+# DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = 'postgresql://messenger_6yfb_user:QNuOwgWF4zKXr1541uivu2Ad3pyLZNNi@dpg-cma201un7f5s73cnr1o0-a.oregon-postgres.render.com/messenger_6yfb'
 
 from sqlalchemy import create_engine, text, Column, Integer, String
 from sqlalchemy.orm import sessionmaker

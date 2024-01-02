@@ -46,8 +46,8 @@ const UserInfoContext = createContext<UserInfoContextType>(
 
 function App() {
 
-  // axios.defaults.baseURL = 'https://simple-messenger-server.onrender.com/';
-  axios.defaults.baseURL = 'http://localhost:8000/';
+  axios.defaults.baseURL = 'https://simple-messenger-server.onrender.com/';
+  // axios.defaults.baseURL = 'http://localhost:8000/';
 
   const [userInfo, setUserInfo] = useState<UserInfoType>({
     id: parseInt(localStorage.getItem('user_id') || '-1'),
