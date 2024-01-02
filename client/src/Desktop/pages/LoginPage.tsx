@@ -6,6 +6,7 @@ import { VisibilityOff, Visibility } from "@mui/icons-material";
 import axios from "axios";
 import { UserInfoContext } from "../../App";
 import { useNavigate } from "react-router-dom";
+import { isMobile } from "react-device-detect";
 
 const Btn = styled(Button)({
     textTransform: 'none',
@@ -123,6 +124,10 @@ export default function DesktopLoginPage() {
                         name: data.username,
                     }
                 );
+                if(isMobile){
+                    navigate('/friends');
+                }
+                else
                 navigate(`/messenger/-1`);
                 // localStorage.setItem('userInfo', JSON.stringify(data));
                 localStorage.setItem('user_id', String(data.id));
