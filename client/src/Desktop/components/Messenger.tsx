@@ -85,8 +85,8 @@ export default function Messenger() {
     )
 
     useEffect(() => {
-        // const newSocket = new WebSocket(`wss://simple-messenger-server.onrender.com/me/ws/${user_id}/${interlocutorId}`);
-        const newSocket = new WebSocket(`ws://localhost:8000/me/ws/${user_id}/${interlocutorId}`);
+        const newSocket = new WebSocket(`wss://simple-messenger-server.onrender.com/me/ws/${user_id}/${interlocutorId}`);
+        // const newSocket = new WebSocket(`ws://localhost:8000/me/ws/${user_id}/${interlocutorId}`);
 
         newSocket.onmessage = (event) => {
             const data = JSON.parse(event.data);
@@ -111,7 +111,10 @@ export default function Messenger() {
 
     return (
         <div id="messenger">
-            <InterlocutorProfile interlocutorId={interlocutorId}/>
+            {
+                isLoaded && 
+                <InterlocutorProfile interlocutorId={interlocutorId} showButton={false}/>
+            }
             {
                 !isLoaded ? <section id='loading'><CircularProgress color="secondary"/></section>
                 :
