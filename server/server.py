@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Header
 from database import get_db, get_user_by_id, create_user, get_user_by_username
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.exc import IntegrityError
@@ -9,17 +9,22 @@ from fastapi.encoders import jsonable_encoder
 
 app = FastAPI()
 
+origins = [
+    "*"
+]
+
 # Разрешить все источники
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 @app.get("/users/{user_id}")
-def get_user_endpoint(user_id: int, db=Depends(get_db)):
+def get_user_endpoint(user_id: int, db=Depends(get_db), token : str = Header(None)):
+    
     user = get_user_by_id(user_id, db)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -43,6 +48,8 @@ def check_auth_endpoint(username: str, password: str, db=Depends(get_db)):
 
 @app.post("/users/")
 def create_user_endpoint(username: str, password: str, db=Depends(get_db)):
+    if len(username) < 4 or len(password) < 4 or len(username) > 30 or len(password) > 30:
+        raise HTTPException(status_code=400, detail="Invalid username or password")
     try:
         create_user(username, password, db)
         return {"username": username, "password": password}

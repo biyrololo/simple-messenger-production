@@ -49,7 +49,8 @@ export default function Messenger() {
         const cancelTokenSource = axios.CancelToken.source();
         const url = `me?id1=${user_id}&id2=${interlocutorId}`;
         axios.get(url, {
-            cancelToken: cancelTokenSource.token
+            cancelToken: cancelTokenSource.token,
+
         })
         .then((response) => {
             const data : MessageResponseType[] = response.data;

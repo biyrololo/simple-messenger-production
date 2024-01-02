@@ -29,6 +29,12 @@ type FormError = {
     passwordDesc: string;
 }
 
+type UserResponseType = {
+    id: number;
+    username: string;
+    password: string;
+}
+
 export default function DesktopLoginPage() {
 
     const navigate = useNavigate();
@@ -110,11 +116,16 @@ export default function DesktopLoginPage() {
         axios.get(url)
         .then(
             res=>{
-                const data = res.data;
-                setUserInfo(data);
+                const data : UserResponseType = res.data;
+                setUserInfo(
+                    {
+                        id: data.id,
+                        name: data.username,
+                    }
+                );
                 navigate(`/messenger/-1`);
                 // localStorage.setItem('userInfo', JSON.stringify(data));
-                localStorage.setItem('user_id', data.id);
+                localStorage.setItem('user_id', String(data.id));
                 localStorage.setItem('username', data.username);
                 localStorage.setItem('password', data.password);
             }

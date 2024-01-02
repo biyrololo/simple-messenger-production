@@ -3,7 +3,7 @@ import './App.css';
 import {Routes, Route, BrowserRouter} from 'react-router-dom';
 import DesktopLoginPage from './Desktop/pages/LoginPage';
 import DesktopMessengerPage from './Desktop/pages/MessengerPage';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material';
 import axios from 'axios';
 import DefaultPage from './Desktop/pages/DefaultPage';
@@ -23,6 +23,7 @@ const darkTheme = createTheme({
   },
 })
 
+
 type UserInfoType = {
   id: number;
   name: string;
@@ -37,7 +38,7 @@ const UserInfoContext = createContext<UserInfoContextType>(
   {
     userInfo: {
       id: -1,
-      name: ''
+      name: '',
     },
     setUserInfo: (user: UserInfoType) => {}
   }
@@ -50,7 +51,7 @@ function App() {
 
   const [userInfo, setUserInfo] = useState<UserInfoType>({
     id: parseInt(localStorage.getItem('user_id') || '-1'),
-    name: localStorage.getItem('user_name') || ''
+    name: localStorage.getItem('user_name') || '',
   })
 
   return (

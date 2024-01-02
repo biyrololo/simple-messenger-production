@@ -7,7 +7,7 @@ import { UserInfoContext } from "../../App";
 import { useState, useRef, useContext, useEffect } from "react";
 import axios from 'axios';
 
-export default function InterlocutorProfile({interlocutorId}: {interlocutorId: number}) {
+export default function InterlocutorProfile({interlocutorId, showButton=true}: {interlocutorId: number, showButton?: boolean}) {
 
     const navigate = useNavigate();
 
@@ -38,9 +38,11 @@ export default function InterlocutorProfile({interlocutorId}: {interlocutorId: n
     return (
         <>
             <section className='d-flex ai-center g-10'>
+                {showButton && 
                 <IconButton onClick={handleGoBack}>
                     <ArrowBackIcon/>
                 </IconButton>
+                }
                 <GetAvatar name={name || '0'}/>
                 <h3>
                     {name}
