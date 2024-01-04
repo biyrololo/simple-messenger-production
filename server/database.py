@@ -1,8 +1,7 @@
 import os
 import hashlib
 
-# DATABASE_URL = os.getenv("DATABASE_URL")
-DATABASE_URL = 'postgresql://messenger_6yfb_user:QNuOwgWF4zKXr1541uivu2Ad3pyLZNNi@dpg-cma201un7f5s73cnr1o0-a.oregon-postgres.render.com/messenger_6yfb'
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 from sqlalchemy import create_engine, text, Column, Integer, String
 from sqlalchemy.orm import sessionmaker
@@ -19,6 +18,41 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+
+class UnconfirmedUsers(Base):
+    __tablename__ = "unconfirmed_users"
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True, nullable=False)
+    code = Column(String, nullable=False)
+    password = Column(String, nullable=False)
+    email = Column(String, nullable=False, unique=True)
+
+def create_unconfirmed_user(username, email, password, code, db):
+    unconfirmed_user = UnconfirmedUsers(username=username, code=code, email=email, password=password)
+    print(unconfirmed_user)
+    db.add(unconfirmed_user)
+    print(1)
+    db.commit()
+    print(2)
+
+def get_code_by_username(username, db):
+    unconfirmed_user = db.query(UnconfirmedUsers).filter(UnconfirmedUsers.username == username).first()
+    if not unconfirmed_user:
+        return -1
+    return unconfirmed_user.code, unconfirmed_user.email
+
+def check_code_and_create_user(username, code, db):
+    unconfirmed_user = db.query(UnconfirmedUsers).filter(UnconfirmedUsers.username == username).first()
+    if not unconfirmed_user:
+        return -1
+    if unconfirmed_user.code != code:
+        return 0
+    create_user(username, unconfirmed_user.password, unconfirmed_user.email, db)
+    db.delete(unconfirmed_user)
+    db.commit()
+    return 1
 
 def get_all_users(db):
     return db.query(User).all()
@@ -29,8 +63,8 @@ def get_user_by_id(user_id, db):
 def get_user_by_username(username, db):
     return db.query(User).filter(User.username == username).first()
 
-def create_user(username, password, db):
-    user = User(username=username, password=password)
+def create_user(username, password, email, db):
+    user = User(username=username, password=password, email=email)
     db.add(user)
     db.commit()
 

@@ -1,11 +1,17 @@
 from fastapi import FastAPI, HTTPException, Depends, Header
-from database import get_db, get_user_by_id, create_user, get_user_by_username
+from database import create_unconfirmed_user, get_db, get_user_by_id, create_user, get_user_by_username
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.exc import IntegrityError
 from database import get_messages, create_message, get_all_users
 from pydantic import BaseModel
 from fastapi import WebSocket
 from fastapi.encoders import jsonable_encoder
+
+from database import check_code_and_create_user, create_unconfirmed_user, get_code_by_username
+
+from generate_code import generate_code
+
+from send_email import send_email
 
 app = FastAPI()
 
@@ -22,8 +28,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get('/confirm-email/{username}')
+def confirm_email_endpoint(username: str, code: str, db=Depends(get_db)):
+    res = check_code_and_create_user(username, code, db)
+    if res == -1:
+        raise HTTPException(status_code=404, detail="User not found")
+    if res == 0:
+        raise HTTPException(status_code=401, detail="Invalid code")
+    return {"message": "Email confirmed"}
+
 @app.get("/users/{user_id}")
-def get_user_endpoint(user_id: int, db=Depends(get_db), token : str = Header(None)):
+def get_user_endpoint(user_id: int, db=Depends(get_db)):
     
     user = get_user_by_id(user_id, db)
     if not user:
@@ -46,13 +61,26 @@ def check_auth_endpoint(username: str, password: str, db=Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return user
 
+@app.get('/repeat-code/{username}')
+def repeat_code_endpoint(username: str, db=Depends(get_db)):
+    res, email = get_code_by_username(username, db)
+    if res == -1:
+        raise HTTPException(status_code=404, detail="User not found")
+    send_email(username, res, email)
+    return None
+
 @app.post("/users/")
-def create_user_endpoint(username: str, password: str, db=Depends(get_db)):
+def create_user_endpoint(username: str, password: str, email: str, db=Depends(get_db)):
     if len(username) < 4 or len(password) < 4 or len(username) > 30 or len(password) > 30:
         raise HTTPException(status_code=400, detail="Invalid username or password")
     try:
-        create_user(username, password, db)
-        return {"username": username, "password": password}
+        code = generate_code()
+        print(code)
+        create_unconfirmed_user(username=username, code=code, email=email, password=password, db=db)
+        print(email)
+        send_email(username, code, email)
+        print("sent email")
+        return None
     except IntegrityError:
         raise HTTPException(status_code=400, detail="Username already registered")
 

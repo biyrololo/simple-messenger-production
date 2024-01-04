@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>
+            email
+        </title>
+        <style>
+            body{
+                width: min(100%, 800px);
+                box-sizing: border-box;
+                font-family: sans-serif;
+            }
+            #root {
+                background-color: #272727;
+                padding: 2rem 3rem;
+            }
+            h1, p{
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root">
+            <h1
+            style="color: #54c558"
+            >
+                Здравствуйте, {{name}}
+            </h1>
+            <h1
+            style="color: #54c558;"
+            >
+                Ваш код для подтверждения регистрации
+            </h1>
+            <h1
+            >
+                {{code}}
+            </h1>
+            <p>
+                Введите его для заверешения 
+                <a href="https://simple-messenger-b.netlify.app/login">
+                    регистрации
+                </a>
+            </p>
+        </div>
+    </body>
+</html>

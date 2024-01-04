@@ -21,7 +21,7 @@ const StyledA = styled('a')({
     cursor: 'pointer'
 })
 
-type State = 'login' | 'register';
+type State = 'login' | 'register' | 'email_confirm';
 
 type FormError = {
     login: Boolean;
@@ -44,6 +44,8 @@ export default function DesktopLoginPage() {
 
     const passwordRef = useRef<HTMLInputElement>(null);
     const usernameRef = useRef<HTMLInputElement>(null);
+    const emailRef = useRef<HTMLInputElement>(null);
+    const codeRef = useRef<HTMLInputElement>(null);
 
     const [curState, setCurState] = useState<State>('login');
 
@@ -57,6 +59,8 @@ export default function DesktopLoginPage() {
         loginDesc: '',
         passwordDesc: ''
     })
+
+    const [username, setUsername] = useState('');
 
     const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
@@ -149,17 +153,18 @@ export default function DesktopLoginPage() {
     }
 
     const handleRegister = () => {
-        if(!passwordRef.current || !usernameRef.current) {
+        if(!passwordRef.current || !usernameRef.current || !emailRef.current) {
             return;
         }
         if(!baseCheckForm()) {
             return;
         }
-        const url = `users/?username=${usernameRef.current.value}&password=${passwordRef.current.value}`;
+        const url = `users/?username=${usernameRef.current.value}&password=${passwordRef.current.value}&email=${emailRef.current.value}`;
         axios.post(url)
         .then(
             res=>{ 
-                handleLogin();
+                setCurState('email_confirm');
+                setUsername(usernameRef!.current!.value);
             }
         )
         .catch(
@@ -176,10 +181,46 @@ export default function DesktopLoginPage() {
         
     }
 
+    const handleConfirmEmail = () => {
+        if(!codeRef.current) {
+            return;
+        }
+        if(codeRef.current.value.length !== 6) {
+            return;
+        }
+        const url = `/confirm-email/${username}?code=${codeRef.current.value}`;
+        axios.get(url)
+        .then(
+            res=>{
+                setCurState('login');
+            }
+        )
+        .catch(
+            err=>{
+                console.log(err);
+            }
+        )
+    }
+
+    const repeatCode = () => {
+        const url = `/repeat-code/${username}`;
+        axios.get(url)
+        .then(
+            res=>{
+                // 
+            }
+        )
+        .catch(
+            err=>{
+                console.log(err);
+            }
+        )
+    }
+
     return (
         <section id="login">
             {
-                curState === 'login' ? 
+                curState === 'login' &&
                 <>
                     <h2 className="ta-center">
                         Вход
@@ -236,7 +277,11 @@ export default function DesktopLoginPage() {
                             Зарегистрироваться
                         </StyledA>
                     </p>
-                </> :
+                </> 
+            }
+
+            {
+                curState === 'register' &&
                 <>
                     <h2 className="ta-center">
                         Регистрация
@@ -246,6 +291,12 @@ export default function DesktopLoginPage() {
                     error={formError.login.valueOf()}
                     helperText={formError.loginDesc}
                     inputRef={usernameRef}
+                    color="secondary"
+                    />
+                    <TextField
+                    label="Email"
+                    inputRef={emailRef}
+                    type="email"
                     color="secondary"
                     />
                     <TextField
@@ -293,6 +344,52 @@ export default function DesktopLoginPage() {
                             Войти
                         </StyledA>
                     </p>
+                </>
+            }
+
+            {
+                curState === 'email_confirm' &&
+                <>
+                    <h2 className="ta-center">
+                        На указанную почту выслан код подтверждения
+                    </h2>
+                    <p>
+                        Проверьте "спам" и "рассылки"
+                    </p>
+                    <TextField
+                    label="Код"
+                    inputRef={codeRef}
+                    color="secondary"
+                    inputProps={
+                        {
+                            pattern: '^[0-9]{6}$'
+                        }
+                    }
+                    />
+                    <Btn
+                    variant="contained"
+                    onClick={handleConfirmEmail}
+                    color="secondary"
+                    style={
+                        {
+                            color: 'white'
+                        }
+                    }
+                    >
+                        Подтвердить код
+                    </Btn>
+                    <Btn
+                    variant="contained"
+                    onClick={repeatCode}
+                    color="secondary"
+                    style={
+                        {
+                            color: 'white'
+                        }
+                    }
+                    >
+                        Отправить ещё раз
+                    </Btn>
                 </>
             }
         </section>

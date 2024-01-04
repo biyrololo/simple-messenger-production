@@ -113,10 +113,6 @@ export default function MobileMessenger() {
         }
     }, [user_id, interlocutorId]);
 
-    const handleGoBack = () => {
-        navigate(-1);
-    }
-
     return (
         <div id="messenger">
             <InterlocutorProfile interlocutorId={interlocutorId}/>
